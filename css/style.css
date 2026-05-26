@@ -1,0 +1,101 @@
+/* ==========================================================================
+   1. MOBILE VIEW (Mobile-first approach, default)
+   ========================================================================== */
+body {
+    /* Mặc định scroll mượt mà */
+    scroll-behavior: smooth; 
+}
+
+/* Giả định container chính bao bọc các figure là thẻ main hoặc section */
+.gallery-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Grid 1 cột */
+    grid-gap: 10px;             /* Khoảng cách 10px giữa hàng và cột */
+}
+
+.gallery-container figure {
+    background-color: #f0f0f0; /* Màu nền sáng mặc định */
+    color: #333333;            /* Màu chữ mặc định */
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 0;
+    transition: transform 0.3s ease; /* Chuyển động mượt */
+}
+
+
+/* ==========================================================================
+   2. TABLET VIEW (Trigger tại 772px)
+   ========================================================================== */
+@media (min-width: 772px) {
+    .gallery-container {
+        /* Không lặp lại display: grid vì đã được kế thừa từ mobile */
+        grid-template-columns: repeat(2, 1fr); /* Đổi thành grid 2 cột */
+    }
+
+    .gallery-container figure {
+        /* Bo góc tạo thành hình tròn (áp dụng khi kích thước width/height bằng nhau) */
+        border-radius: 50%; 
+    }
+
+    /* Đặt figure cuối cùng chiếm toàn bộ 2 cột */
+    .gallery-container figure:last-child {
+        grid-column: span 2;
+    }
+}
+
+
+/* ==========================================================================
+   3. LARGE SCREEN VIEW (Trigger tại 992px)
+   ========================================================================== */
+@media (min-width: 992px) {
+    .gallery-container {
+        grid-template-columns: repeat(3, 1fr); /* Đổi thành grid 3 cột */
+    }
+
+    .gallery-container figure {
+        /* Xóa bỏ border radius của tất cả các figure như yêu cầu */
+        border-radius: 0; 
+    }
+
+    /* Đặt mỗi figure thứ 3 (3, 6, 9,...) chiếm cả 2 cột */
+    .gallery-container figure:nth-child(3n) {
+        grid-column: span 2;
+    }
+    
+    /* Reset lại thuộc tính của child cuối cùng ở tablet nếu nó không phải là bội số của 3 */
+    .gallery-container figure:last-child {
+        grid-column: auto;
+    }
+}
+
+
+/* ==========================================================================
+   4. PREFERS-REDUCED-MOTION (Tùy chọn giảm chuyển động)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    body {
+        scroll-behavior: auto !important; /* Loại bỏ hiệu ứng cuộn mượt */
+    }
+    
+    *, *::before, *::after {
+        animation-delay: -1ms !important;
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        background-attachment: initial !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+    }
+}
+
+
+/* ==========================================================================
+   5. PREFERS-COLOR-SCHEME (Dark Mode)
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    .gallery-container figure {
+        background-color: #1a1a1a; /* Màu nền tối hẳn */
+        color: #fffb00;            /* Màu chữ sáng ngả vàng (Đảm bảo độ tương phản cao đạt chuẩn WAVE) */
+        border-color: #000000;     /* Viền chuyển sang màu đen */
+    }
+}
